@@ -47,7 +47,7 @@ public class Foil {
 			this.maxRuleLength = maxRuleLength;
 		else
 			throw new NumberFormatException(
-					"规则的条件数的最大值必须为正整数！");
+					"规则的中条件的个数的最大值必须为正整数！");
 	}
 	
 	/**
@@ -199,18 +199,27 @@ public class Foil {
 	 * @return
 	 */
 	private HashMap<Integer, Integer> getRule(HashSet<Integer> pos, HashSet<Integer> neg) {
-		HashMap<Integer, Integer> temp = new HashMap<Integer, Integer>();
-		// TODO
-		return temp;
+		HashMap<Integer, Integer> rule = new HashMap<Integer, Integer>();
+		while(neg.size() > 0 && rule.size() < maxRuleLength) {
+			
+		}
+		return rule;
 	}
 	
 	/**
 	 * FOIL算法外层循环正元组调整
+	 * <p>
+	 * 删除满足规则rule的正元组
 	 * @param pos
+	 * 		正元组集合
 	 * @param rule
+	 * 		规则
 	 */
 	private void adjustPos(HashSet<Integer> pos, HashMap<Integer, Integer> rule) {
-		// TODO
+		for(int index : pos) {
+			if(satisfyRule(attributeValue.get(index), rule))
+				pos.remove(index);
+		}
 	}
 	
 	/**
