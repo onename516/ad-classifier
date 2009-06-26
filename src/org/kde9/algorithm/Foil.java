@@ -363,12 +363,10 @@ public class Foil {
 	public static void main(String[] args) {
 		Foil foil = new Foil();
 		FeatureSelection fs = new FeatureSelection();
-		fs.dataConversion();
 		fs.TF();
-		int attrSum = fs.getResult().size();
-		foil.setAttributeNum(attrSum);
+		foil.setAttributeNum(fs.getFinalAttributes());
 		foil.setSpanOfAttribute(fs.getValueSpan());
-		for(int i = 0; i < fs.getTempData().length; i++)
+		for(int i = 0; i < fs.getInstances(); i++)
 			foil.insertTrainingSet(fs.getType().get(i), (fs.getProcessedData())[i]);
 		System.out.println("初始化完成，开始训练！");
 		foil.foilTrainingSet(0);
