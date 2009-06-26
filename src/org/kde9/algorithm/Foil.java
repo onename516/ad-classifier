@@ -10,6 +10,8 @@ public class Foil {
 	 */
 	private int attributeNum = 0;
 	
+	private int maxRuleLength = 10;
+
 	/**
 	 * 每个属性值可能的取值个数。
 	 * <strong>
@@ -38,6 +40,14 @@ public class Foil {
 		attributeValue = new Vector<Vector<Integer>>();
 		types = new HashMap<Integer, HashSet<Integer>>();
 		rules = new Vector<HashMap<Integer,Integer>>();
+	}
+	
+	public void setMaxRuleLength(int maxRuleLength) {
+		if(maxRuleLength > 0)
+			this.maxRuleLength = maxRuleLength;
+		else
+			throw new NumberFormatException(
+					"规则的条件数的最大值必须为正整数！");
 	}
 	
 	/**
@@ -145,6 +155,21 @@ public class Foil {
 	}
 	
 	/**
+	 * 判断给定的数据是否属于刚刚训练的类别
+	 * @param data
+	 * 		要判断的数据的属性值的集合
+	 * @return
+	 * 		是否属于刚刚训练的类别，如果是返回true。
+	 */
+	public boolean belongToCurrentClass(Vector<Integer> data) {
+		for(HashMap<Integer, Integer> rule : rules) {
+			if(satisfyRule(data, rule))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * FOIL算法实现
 	 * @param type
 	 */
@@ -186,6 +211,22 @@ public class Foil {
 	 */
 	private void adjustPos(HashSet<Integer> pos, HashMap<Integer, Integer> rule) {
 		// TODO
+	}
+	
+	/**
+	 * 判断给定的数据是否满足给定的规则
+	 * @param data
+	 * 		给定的数据
+	 * @param rule
+	 * 		给定的规则
+	 * @return
+	 * 		是否满足，如满足返回true。
+	 */
+	private boolean satisfyRule(Vector<Integer> data, HashMap<Integer, Integer> rule) {
+		for(int index : rule.keySet())
+			if(!data.get(index).equals(rule.get(index)))
+				return false;
+		return true;
 	}
 	
 	/**
