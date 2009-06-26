@@ -45,7 +45,7 @@ public class PreProcess {
 		}
 	}
 	
-	public void readFile(){
+	private void readFile(){
 		try {
 			//¶ÁnameÎÄ¼þ
 			fis = new FileInputStream(adNames);
@@ -94,7 +94,7 @@ public class PreProcess {
 		}	
 	}
 	
-	public void outputFile(){
+	private void outputFile(){
 		try {
 			bw.write("@relation " + relation + System.getProperty("line.separator"));
 			for(int i = 0; i < realAttribute.size(); i++){
@@ -119,10 +119,14 @@ public class PreProcess {
 		}	
 	}
 	
+	public void run(){
+		readFile();
+		outputFile();
+	}
+	
 	public static void main(String args[]){
 		PreProcess pprocess = new PreProcess();
-		pprocess.readFile();
-		pprocess.outputFile();
+		pprocess.run();
 		System.out.println("Data preprocess successfully!");
 	}
 }
