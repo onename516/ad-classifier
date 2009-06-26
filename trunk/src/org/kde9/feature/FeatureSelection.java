@@ -90,6 +90,56 @@ public class FeatureSelection {
 			processedData[i].add(tempData[i][tempData[0].length - 1]);
 	}
 	
+	public void CHI(){   //卡方统计量
+		int[][] A = new int[tempData[0].length - 1][];
+		int[][] B = new int[tempData[0].length - 1][];
+		int[][] C = new int[tempData[0].length - 1][];
+		int[][] D = new int[tempData[0].length - 1][];
+		int[][]kafang = new int[tempData[0].length - 1][];
+		for(int i = 0; i < tempData[0].length - 1; i++){
+			kafang[i] = new int[2];
+			A[i] = new int[2];
+			B[i] = new int[2];
+			C[i] = new int[2];
+			D[i] = new int[2];
+			for(int j = 0; j< 2; j++){
+				A[i][j] = 0;
+				B[i][j] = 0;
+				C[i][j] = 0;
+				D[i][j] = 0;
+			}
+		}
+		int []P = new int[2];
+		P[0] = 0;
+		P[1] = 0;
+		for(int i = 0; i < tempData.length; i++){
+			if(tempData[i][tempData[i].length -1].trim().equalsIgnoreCase("ad.")){
+				for(int j = 0; j < tempData[0].length - 1; j++){
+					if(Integer.valueOf(tempData[i][j]) > 0){
+						A[j][0]++;
+						B[j][1]++;
+					}else if(Integer.valueOf(tempData[i][j]) == 0){
+						C[j][0]++;
+						D[j][1]++;
+					}
+				}
+				P[0]++;
+			}else if(tempData[i][tempData[i].length -1].trim().equalsIgnoreCase("nonad.")){
+				for(int j = 0; j < tempData[0].length - 1; j++){
+					if(Integer.valueOf(tempData[i][j]) > 0){
+						A[j][1]++;
+						B[j][0]++;
+					}else if(Integer.valueOf(tempData[i][j]) == 0){
+						C[j][1]++;
+						D[j][0]++;
+					}
+				}
+				P[1]++;
+			}
+		}
+		
+	}
+	
 	public static void main(String args[]){
 		FeatureSelection fs = new FeatureSelection();
 		fs.dataConversion();
