@@ -29,8 +29,7 @@ public class PreProcess {
 	LinkedHashMap<String, Vector<String>> attribute;
 	Vector<String> realAttribute;
 	Vector<String> data;
-	
-	
+
 	public PreProcess(){		
 		try {
 			fos = new FileOutputStream(adOutFile);
@@ -122,6 +121,13 @@ public class PreProcess {
 	public void run(){
 		readFile();
 		outputFile();
+	}
+	
+	/**
+	 * @return the data
+	 */
+	public Vector<String> getData() {
+		return data;
 	}
 	
 	public static void main(String args[]){
