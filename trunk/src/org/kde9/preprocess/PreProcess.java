@@ -8,8 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Vector;
 
 public class PreProcess {
@@ -26,18 +24,23 @@ public class PreProcess {
 	String adOutFile = "./data/ad2.arff";
 	
 	String relation;
-	LinkedHashMap<String, Vector<String>> attribute;
-	Vector<String> realAttribute;
-	Vector<String> data;
+	Vector<String> attribute;
+	Vector<String> dataString;
+	Vector<Integer> type;
+	int attributes;
+	int instances;
+	int n;   //离散化区间
+	int [][]data;
 
 	public PreProcess(){		
 		try {
 			fos = new FileOutputStream(adOutFile);
 			osw = new OutputStreamWriter(fos);
 			bw = new BufferedWriter(osw);
-			attribute = new LinkedHashMap<String, Vector<String>>();
-			realAttribute = new Vector<String>();
-			data = new Vector<String>();
+			attribute = new Vector<String>();
+			dataString = new Vector<String>();
+			type = new Vector<Integer>();
+			n = 7;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,38 +57,71 @@ public class PreProcess {
 			String title = br.readLine();
 			String temp;
 			while((temp = br.readLine()) != null){
-				String[] result = temp.toLowerCase().split(" ");
-				if(result[result.length - 1].trim().equalsIgnoreCase("classes.")){
-					relation = result[0].substring(0, result[0].length() - 1) + "-or-" + result[1];
-					//System.out.println(relation);
-				}
-				if(result[result.length - 1].trim().equalsIgnoreCase("continuous.")){
-					String t = result[0].substring(0, result[0].length() - 1);
-					realAttribute.add(t);
-				}
-				if(result[0].equalsIgnoreCase("|")){
-					int sum = Integer.parseInt(result[1]);
-					String attr = null;
-					Vector<String> tt = new Vector<String>();
-					for(int i = 0; i < sum; i++){
-						String line = br.readLine();
-						String [] lineresult = line.split("\\u002A");   //*转义
-						attr = lineresult[0];
-						String [] reresult = lineresult[1].split(":");
-						tt.add(reresult[0]);
-					}
-					attribute.put(attr, tt);
+				if(temp.endsWith("classes.")){
+					String []t = temp.toLowerCase().split(" ");
+					relation = t[0].substring(0, t[0].length() - 1) + "-or-" + t[1];
+				}else if(!temp.startsWith("|") && temp.trim().length() != 0){
+					String[] result = temp.toLowerCase().split(":");
+					attribute.add(result[0]);
 				}
 			}
+			attributes = attribute.size();
 			//读data文件
 			fis = new FileInputStream(adData);
 			isr = new InputStreamReader(fis);
 			br = new BufferedReader(isr);
-
 			String temp2;
+			int index = 0;
 			while((temp2 = br.readLine()) != null){
 				//System.out.println(temp2);
-				data.add(temp2);
+				dataString.add(temp2);
+				if(temp2.trim().endsWith(",ad.")){
+					type.add(1);
+				}else if(temp2.trim().endsWith("nonad.")){
+					type.add(0);
+				}
+			}
+			instances = dataString.size();
+			
+			double []min = {999999, 999999, 999999};
+			double []max = {0, 0, 0};
+			double []dx = new double[3];
+			
+			String [][]tempData = new String[instances][];
+			data = new int[instances][];
+			for(int i = 0; i < instances; i++){
+				tempData[i] = new String[attributes];
+				data[i] = new int[attributes];
+			}
+			for(int i = 0; i < instances; i++){
+				String t = dataString.get(i);
+				String []r = t.split(",");
+				for(int j = 0; j < attributes; j++){
+					if(r[j].trim().equalsIgnoreCase("?")){
+						tempData[i][j] = "0";
+					}else{
+						tempData[i][j] = r[j];
+					}
+				}
+				for(int j = 0; j < 3; j++){
+					if(Double.parseDouble(tempData[i][j]) < min[j])
+						min[j] = Double.parseDouble(tempData[i][j]);
+					if(Double.parseDouble(tempData[i][j]) > max[j])
+						max[j] = Double.parseDouble(tempData[i][j]);
+				}
+			}
+			for(int i = 0; i < 3; i++)
+				dx[i] = (max[i] - min[i])/n;
+			for(int i = 0; i < instances; i++){
+				for(int j = 0; j < 3; j++){
+					int h = (int)(Double.parseDouble(tempData[i][j])/dx[j]);
+					tempData[i][j] = String.valueOf(h);
+				}
+			}
+			for(int i = 0; i < instances; i++){
+				for(int j = 0; j < attributes; j++){
+					data[i][j] = Integer.valueOf(tempData[i][j]);
+				}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -96,20 +132,17 @@ public class PreProcess {
 	private void outputFile(){
 		try {
 			bw.write("@relation " + relation + System.getProperty("line.separator"));
-			for(int i = 0; i < realAttribute.size(); i++){
-				bw.write("@attribute '" + realAttribute.get(i) + "' real" + System.getProperty("line.separator"));
+			for(int i = 0; i < 3; i++){
+				bw.write("@attribute '" + attribute.get(i) + "' real" + System.getProperty("line.separator"));
 			}
-			bw.write("@attribute 'local' { 0, 1 }" + System.getProperty("line.separator"));
-			for(String key : attribute.keySet()){
-				for(int i = 0; i < attribute.get(key).size(); i++){
-					bw.write("@attribute '" + key + "*" + attribute.get(key).get(i) + "' { 0, 1 }" + System.getProperty("line.separator"));
-				}
+			for(int i = 3; i < attribute.size(); i++){
+				bw.write("@attribute '" + attribute.get(i) + "' { 0, 1 }" + System.getProperty("line.separator"));
 			}
 			bw.write("@attribute 'classes' { ad., nonad. }" + System.getProperty("line.separator"));
 			bw.write("@data" + System.getProperty("line.separator"));
 			//System.out.println(data.size());
-			for(int i = 0; i < data.size(); i++){
-				bw.write(data.get(i) + System.getProperty("line.separator"));
+			for(int i = 0; i < dataString.size(); i++){
+				bw.write(dataString.get(i) + System.getProperty("line.separator"));
 			}
 			bw.write(System.getProperty("line.separator"));
 		} catch (IOException e) {
@@ -120,19 +153,49 @@ public class PreProcess {
 	
 	public void run(){
 		readFile();
-		//outputFile();
+		outputFile();
 	}
 	
 	/**
+	 * @return the attribute
+	 */
+	public Vector<String> getAttribute() {
+		return attribute;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public Vector<Integer> getType() {
+		return type;
+	}
+
+	/**
+	 * @return the attributes
+	 */
+	public int getAttributes() {
+		return attributes;
+	}
+
+	/**
+	 * @return the instances
+	 */
+	public int getInstances() {
+		return instances;
+	}
+
+	/**
 	 * @return the data
 	 */
-	public Vector<String> getData() {
+	public int[][] getData() {
 		return data;
 	}
-	
+
 	public static void main(String args[]){
 		PreProcess pprocess = new PreProcess();
 		pprocess.run();
+		System.out.println(pprocess.attribute.size());
+		System.out.println(pprocess.dataString.size());
 		System.out.println("Data preprocess successfully!");
 	}
 }
