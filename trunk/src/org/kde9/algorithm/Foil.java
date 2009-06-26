@@ -185,6 +185,7 @@ public class Foil {
 		initFoil();
 		HashSet<Integer> pos = (HashSet<Integer>) types.get(type).clone();
 		HashSet<Integer> neg = new HashSet<Integer>();
+		double start = pos.size();
 		for(int t : types.keySet())
 			if(t != type)
 				neg.addAll(types.get(t));
@@ -194,6 +195,7 @@ public class Foil {
 			HashMap<Integer, Integer> rule = getBestRule(posx, negx);
 			rules.add(rule);
 			adjustPos(pos, rule);
+			System.out.println(pos.size()/start);/////////////////////////////////////
 		}
 	}
 	
@@ -215,6 +217,13 @@ public class Foil {
 		return rule;
 	}
 	
+	/**
+	 * 获得增益最大的literal
+	 * @param pos
+	 * @param neg
+	 * @param rule
+	 * @return
+	 */
 	private int[] getBestLiteral(HashSet<Integer> pos, HashSet<Integer> neg, 
 			HashMap<Integer, Integer> rule) {
 		int[] temp = {0, 0};
@@ -239,6 +248,14 @@ public class Foil {
 		return temp;
 	}
 	
+	/**
+	 * FOIL算法内层循环正元组和负元组调整
+	 * <p>
+	 * 删除不满足规则rule的正负元组
+	 * @param pos
+	 * @param neg
+	 * @param rule
+	 */
 	private void adjustPosAndNeg(HashSet<Integer> pos, HashSet<Integer> neg, 
 			HashMap<Integer, Integer> rule) {
 		tempVector.clear();
@@ -338,12 +355,12 @@ public class Foil {
 	
 	public static void main(String[] args) {
 		Foil foil = new Foil();
-		foil.setAttributeNum(5);
+		foil.setAttributeNum(10);
 		foil.setSpanOfAttribute(2);
-		for(int i = 0; i < 18; i++) {
+		for(int i = 0; i < 300; i++) {
 			Vector<Integer> v = new Vector<Integer>();
-			for(int j = 0; j < 5; j++)
-				if(i%5 == j)
+			for(int j = 0; j < 10; j++)
+				if(i%15 == j)
 					v.add(1);
 				else
 					v.add(0);
