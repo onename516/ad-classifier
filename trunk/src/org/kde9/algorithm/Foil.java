@@ -35,6 +35,11 @@ public class Foil {
 	 */
 	private Vector<HashMap<Integer, Integer>> rules;
 	
+	/**
+	 * 临时数据
+	 */
+	private Vector<Integer> tempVector = new Vector<Integer>();
+	
 	public Foil() {
 		span = new Vector<Integer>();
 		attributeValue = new Vector<Vector<Integer>>();
@@ -186,7 +191,7 @@ public class Foil {
 		while(pos.size() > 0) {
 			HashSet<Integer> posx = (HashSet<Integer>) pos.clone();
 			HashSet<Integer> negx = (HashSet<Integer>) neg.clone();
-			HashMap<Integer, Integer> rule = getRule(posx, negx);
+			HashMap<Integer, Integer> rule = getBestRule(posx, negx);
 			rules.add(rule);
 			adjustPos(pos, rule);
 		}
@@ -198,12 +203,56 @@ public class Foil {
 	 * @param neg
 	 * @return
 	 */
-	private HashMap<Integer, Integer> getRule(HashSet<Integer> pos, HashSet<Integer> neg) {
+	private HashMap<Integer, Integer> getBestRule(HashSet<Integer> pos, HashSet<Integer> neg) {
 		HashMap<Integer, Integer> rule = new HashMap<Integer, Integer>();
 		while(neg.size() > 0 && rule.size() < maxRuleLength) {
-			
+			int[] literal = getBestLiteral(pos, neg, rule);
+			if(rule.containsKey(literal[0]) && rule.get(literal[0]).equals(literal[1]))
+				break;
+			rule.put(literal[0], literal[1]);
+			adjustPosAndNeg(pos, neg, rule);
 		}
 		return rule;
+	}
+	
+	private int[] getBestLiteral(HashSet<Integer> pos, HashSet<Integer> neg, 
+			HashMap<Integer, Integer> rule) {
+		int[] temp = {0, 0};
+		double gain = -2147483647;
+		for(int i = 0; i < attributeNum; i++)
+			for(int j = 0; j < span.get(i); j++) {
+				double px = 0, nx = 0;
+				for(int index : pos)
+					if(attributeValue.get(index).get(i).equals(j))
+						px++;
+				for(int index : neg)
+					if(attributeValue.get(index).get(i).equals(j))
+						nx++;
+				double gainx = 
+					px * (Math.log(px/(px+nx)) - Math.log(pos.size()/(double)(pos.size()+neg.size())));
+				if(gainx > gain) {
+					temp[0] = i;
+					temp[1] = j;
+					gain = gainx;
+				}
+			}
+		return temp;
+	}
+	
+	private void adjustPosAndNeg(HashSet<Integer> pos, HashSet<Integer> neg, 
+			HashMap<Integer, Integer> rule) {
+		tempVector.clear();
+		for(int index : pos)
+			if(!satisfyRule(attributeValue.get(index), rule))
+				tempVector.add(index);
+		for(int index : tempVector)
+			pos.remove(index);
+		tempVector.clear();
+		for(int index : neg)
+			if(!satisfyRule(attributeValue.get(index), rule))
+				tempVector.add(index);
+		for(int index : tempVector)
+			neg.remove(index);
 	}
 	
 	/**
@@ -216,10 +265,13 @@ public class Foil {
 	 * 		规则
 	 */
 	private void adjustPos(HashSet<Integer> pos, HashMap<Integer, Integer> rule) {
+		tempVector.clear();
 		for(int index : pos) {
 			if(satisfyRule(attributeValue.get(index), rule))
-				pos.remove(index);
+				tempVector.add(index);
 		}
+		for(int index : tempVector)
+			pos.remove(index);
 	}
 	
 	/**
@@ -253,7 +305,8 @@ public class Foil {
 	 */
 	public void summaru(boolean detail) {
 		for (int type : types.keySet()) {
-			System.out.println(type + ": " + types.get(type).size());
+			System.out.println();
+			System.out.println("class " + type + " [" + types.get(type).size() + "]");
 			if (detail)
 				for (int i : types.get(type)) {
 					for (int j : attributeValue.get(i))
@@ -263,19 +316,42 @@ public class Foil {
 		}
 	}
 	
+	private void showRule() {
+		System.out.println();
+		System.out.println("规则集：");
+		for(HashMap<Integer, Integer> r : rules)
+			System.out.println("\t" + r);
+	}
+	
+	public void calculate(int type) {
+		int i = 0, j = 0;
+		for(Vector<Integer> v : attributeValue)
+			if(belongToCurrentClass(v))
+				i++;
+		for(int index : types.get(type))
+			if(belongToCurrentClass(attributeValue.get(index)))
+				j++;
+		System.out.println();
+		System.out.println("完全覆盖" + type + "类? " + (j == types.get(type).size()) + "\n正确率： "); 
+		System.out.println("\t" + j + " / " + i + " = " + j/(double)i);
+	}
+	
 	public static void main(String[] args) {
 		Foil foil = new Foil();
 		foil.setAttributeNum(5);
 		foil.setSpanOfAttribute(2);
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 18; i++) {
 			Vector<Integer> v = new Vector<Integer>();
 			for(int j = 0; j < 5; j++)
-				if(i == j)
+				if(i%5 == j)
 					v.add(1);
 				else
 					v.add(0);
-			foil.insertTrainingSet(i, v);
+			foil.insertTrainingSet(i%5, v);
 		}
+		foil.foilTrainingSet(0);
 		foil.summaru(true);
+		foil.showRule();
+		foil.calculate(0);
 	}
 }
