@@ -120,7 +120,7 @@ public class PreProcess {
 	
 	public void run(){
 		readFile();
-		outputFile();
+		//outputFile();
 	}
 	
 	/**
