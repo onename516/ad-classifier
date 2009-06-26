@@ -1,7 +1,6 @@
 package org.kde9.feature;
 
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Vector;
@@ -12,12 +11,13 @@ public class FeatureSelection {
 	Vector<String> data;
 	String [][] tempData;
 	Vector<String>[] processedData;
+	Vector<Integer> result;
 	int []flag;
 	int n;      //离散化区间大小
 	double []min = {999999, 999999, 999999};
 	double []max = {0, 0, 0};
 	double []dx;
-	int TFYIELD = 80;   //TF算法域值
+	int TFYIELD = 150;   //TF算法域值
 	
 	public FeatureSelection() {
 		n = 8;
@@ -29,6 +29,7 @@ public class FeatureSelection {
 		processedData = new Vector[data.size()];
 		for(int i = 0; i < data.size(); i++)
 			processedData[i] = new Vector<String>();
+		result = new Vector<Integer>();
 		dx = new double[3];
 	}
 	
@@ -79,6 +80,7 @@ public class FeatureSelection {
 		}
 		for(int i = 0; i < flag.length - 1; i++){
 			if(flag[i] == 1){
+				result.add(i);
 				for(int j = 0; j < tempData.length; j++){
 					processedData[j].add(tempData[j][i]);
 				}
@@ -120,6 +122,7 @@ public class FeatureSelection {
 //			//System.out.println(fs.max[i]);
 //		}
 		System.out.println(fs.processedData[0].size());
+		System.out.println(fs.result.size());
 		System.out.println(fs.data.size());
 	}
 }
