@@ -20,10 +20,10 @@ public class FeatureSelection {
 	double []min = {999999, 999999, 999999};
 	double []max = {0, 0, 0};
 	double []dx;
-	int TFYIELD = 50;   //TF算法域值
+	int TFYIELD = 100;   //TF算法域值
 	
 	public FeatureSelection() {
-		n = 8;
+		n = 7;
 		PreProcess pProcess = new PreProcess();
 		pProcess.run();
 		data = new Vector<String>();

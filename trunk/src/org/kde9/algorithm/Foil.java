@@ -136,7 +136,7 @@ public class Foil {
 			if(value < span && value >= 0)
 				temp.add(value);
 			else
-				throw new NumberFormatException("属性值的取值和设定范围不符！");
+				throw new NumberFormatException("属性值的取值和设定范围不符！" + value + "/" + span);
 		}
 		if(attributeValue.add(temp)) {
 			if(!types.containsKey(type))
@@ -191,13 +191,18 @@ public class Foil {
 		for(int t : types.keySet())
 			if(t != type)
 				neg.addAll(types.get(t));
+		double i = 0;
 		while(pos.size() > 0) {
 			HashSet<Integer> posx = (HashSet<Integer>) pos.clone();
 			HashSet<Integer> negx = (HashSet<Integer>) neg.clone();
 			HashMap<Integer, Integer> rule = getBestRule(posx, negx);
 			rules.add(rule);
 			adjustPos(pos, rule);
-			System.out.println(pos.size()/start);/////////////////////////////////////
+			double rate = 1-pos.size()/start;
+			if(10*rate > i) {
+				i = 10*rate + 1;
+				System.out.println((int)(100*rate) + "%");/////////////////////////////////////
+			}
 		}
 	}
 	
@@ -365,6 +370,7 @@ public class Foil {
 		foil.setSpanOfAttribute(fs.getValueSpan());
 		for(int i = 0; i < fs.getTempData().length; i++)
 			foil.insertTrainingSet(fs.getType().get(i), (fs.getProcessedData())[i]);
+		System.out.println("初始化完成，开始训练！");
 		foil.foilTrainingSet(0);
 		foil.summary(false);
 		foil.showRule();
