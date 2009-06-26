@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 
+import org.kde9.feature.FeatureSelection;
+
 public class Foil {
 	/**
 	 * 属性值的个数
@@ -320,7 +322,7 @@ public class Foil {
 	 * ~~仅供测试使用~~
 	 * @param detail
 	 */
-	public void summaru(boolean detail) {
+	public void summary(boolean detail) {
 		for (int type : types.keySet()) {
 			System.out.println();
 			System.out.println("class " + type + " [" + types.get(type).size() + "]");
@@ -355,19 +357,16 @@ public class Foil {
 	
 	public static void main(String[] args) {
 		Foil foil = new Foil();
-		foil.setAttributeNum(10);
-		foil.setSpanOfAttribute(2);
-		for(int i = 0; i < 300; i++) {
-			Vector<Integer> v = new Vector<Integer>();
-			for(int j = 0; j < 10; j++)
-				if(i%15 == j)
-					v.add(1);
-				else
-					v.add(0);
-			foil.insertTrainingSet(i%5, v);
-		}
+		FeatureSelection fs = new FeatureSelection();
+		fs.dataConversion();
+		fs.TF();
+		int attrSum = fs.getResult().size();
+		foil.setAttributeNum(attrSum);
+		foil.setSpanOfAttribute(fs.getValueSpan());
+		for(int i = 0; i < fs.getTempData().length; i++)
+			foil.insertTrainingSet(fs.getType().get(i), (fs.getProcessedData())[i]);
 		foil.foilTrainingSet(0);
-		foil.summaru(true);
+		foil.summary(false);
 		foil.showRule();
 		foil.calculate(0);
 	}

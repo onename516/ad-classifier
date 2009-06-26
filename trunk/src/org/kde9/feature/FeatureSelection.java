@@ -10,14 +10,17 @@ import org.kde9.preprocess.PreProcess;
 public class FeatureSelection {
 	Vector<String> data;
 	String [][] tempData;
-	Vector<String>[] processedData;
+	Vector<Integer>[] processedData;
+	Vector<Integer> type;
 	Vector<Integer> result;
+	Vector<Integer> valueSpan;
+
 	int []flag;
 	int n;      //离散化区间大小
 	double []min = {999999, 999999, 999999};
 	double []max = {0, 0, 0};
 	double []dx;
-	int TFYIELD = 150;   //TF算法域值
+	int TFYIELD = 50;   //TF算法域值
 	
 	public FeatureSelection() {
 		n = 8;
@@ -28,8 +31,10 @@ public class FeatureSelection {
 		tempData = new String[data.size()][];
 		processedData = new Vector[data.size()];
 		for(int i = 0; i < data.size(); i++)
-			processedData[i] = new Vector<String>();
+			processedData[i] = new Vector<Integer>();
 		result = new Vector<Integer>();
+		valueSpan = new Vector<Integer>();
+		type = new Vector<Integer>();
 		dx = new double[3];
 	}
 	
@@ -81,13 +86,23 @@ public class FeatureSelection {
 		for(int i = 0; i < flag.length - 1; i++){
 			if(flag[i] == 1){
 				result.add(i);
+				if(i == 0 || i == 1 || i == 2){
+					valueSpan.add(8);
+				}else{
+					valueSpan.add(2);
+				}
 				for(int j = 0; j < tempData.length; j++){
-					processedData[j].add(tempData[j][i]);
+					processedData[j].add(Integer.valueOf(tempData[j][i]));
 				}
 			}
 		}
-		for(int i = 0; i < tempData.length; i++)
-			processedData[i].add(tempData[i][tempData[0].length - 1]);
+		for(int i = 0; i < tempData.length; i++){
+			if(tempData[i][tempData[0].length - 1].trim().equalsIgnoreCase("ad."))
+				type.add(1);
+			else if(tempData[i][tempData[0].length - 1].trim().equalsIgnoreCase("nonad."))
+				type.add(0);
+			//processedData[i].add(tempData[i][tempData[0].length - 1]);
+		}
 	}
 	
 	public void CHI(){   //卡方统计量
@@ -140,6 +155,41 @@ public class FeatureSelection {
 		
 	}
 	
+	/**
+	 * @return the result
+	 */
+	public Vector<Integer> getResult() {
+		return result;
+	}
+	
+	/**
+	 * @return the valueSpan
+	 */
+	public Vector<Integer> getValueSpan() {
+		return valueSpan;
+	}
+
+	/**
+	 * @return the processedData
+	 */
+	public Vector<Integer>[] getProcessedData() {
+		return processedData;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public Vector<Integer> getType() {
+		return type;
+	}
+
+	/**
+	 * @return the tempData
+	 */
+	public String[][] getTempData() {
+		return tempData;
+	}
+
 	public static void main(String args[]){
 		FeatureSelection fs = new FeatureSelection();
 		fs.dataConversion();
