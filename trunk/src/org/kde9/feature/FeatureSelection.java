@@ -12,7 +12,7 @@ public class FeatureSelection {
 
 	int []flag;
 	int TFYIELD = 100;   //TF算法域值
-	double CHIYIELD = 3.0;  //CHI算法域值
+	double CHIYIELD = -20;  //CHI算法域值
 	int attributes;
 	int instances;
 	int finalAttributes = 0;
@@ -20,7 +20,7 @@ public class FeatureSelection {
 	
 	public FeatureSelection(){
 		PreProcess pProcess = new PreProcess();
-		pProcess.run();
+		pProcess.run(null);
 		attributes = pProcess.getAttributes();
 		instances = pProcess.getInstances();
 		type = pProcess.getType();
@@ -36,7 +36,7 @@ public class FeatureSelection {
 	
 	public FeatureSelection(String adNames, String adData, String outfileName) {
 		PreProcess pProcess = new PreProcess(adNames, adData, outfileName);
-		pProcess.run();
+		pProcess.run(null);
 		attributes = pProcess.getAttributes();
 		instances = pProcess.getInstances();
 		type = pProcess.getType();
@@ -215,8 +215,8 @@ public class FeatureSelection {
 	}
 	
 	public void run(){
-		TF();
-		//CHI();
+		//TF();
+		CHI();
 	}
 
 	public static void main(String args[]){
