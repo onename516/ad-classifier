@@ -10,9 +10,9 @@ public class Foil {
 	/**
 	 * 属性值的个数
 	 */
-	private int attributeNum = 0;
+	protected int attributeNum = 0;
 	
-	private int maxRuleLength = 10;
+	protected int maxRuleLength = 10;
 
 	/**
 	 * 每个属性值可能的取值个数。
@@ -20,32 +20,32 @@ public class Foil {
 	 * 注意：每个属性值的取值必须是从0开始的连续递增整数。
 	 * </strong>
 	 */
-	private Vector<Integer> span;
+	protected Vector<Integer> span;
 	
 	/**
 	 * 每个TrainingSet中每个属性值的取值。
 	 */
-	private Vector<Vector<Integer>> attributeValue;
+	protected Vector<Vector<Integer>> attributeValue;
 	
 	/**
 	 * 每个类别中包含的TrainingSet。
 	 */
-	private HashMap<Integer, HashSet<Integer>> types;
+	protected HashMap<Integer, HashSet<Integer>> types;
 	
 	/**
 	 * 生成的规则集
 	 */
-	private Vector<HashMap<Integer, Integer>> rules;
+	protected Vector<HashMap<Integer, Integer>> rules;
 	
 	/**
 	 * 忽略比率
 	 */
-	private double ignoreRate = 0;
+	protected double ignoreRate = 0;
 	
 	/**
 	 * 临时数据
 	 */
-	private Vector<Integer> tempVector = new Vector<Integer>();
+	protected Vector<Integer> tempVector = new Vector<Integer>();
 	
 	public Foil() {
 		span = new Vector<Integer>();
@@ -127,6 +127,14 @@ public class Foil {
 			this.ignoreRate = ignoreRate;
 	}
 
+	public void setWRate(double rate) {
+		
+	}
+	
+	public void setLimit(double limit) {
+		
+	}
+	
 	/**
 	 * 增加一个训练数据
 	 * @throws ArrayIndexOutOfBoundsException
@@ -255,7 +263,7 @@ public class Foil {
 	 * @param neg
 	 * @return
 	 */
-	private HashMap<Integer, Integer> getBestRule(HashSet<Integer> pos, HashSet<Integer> neg) {
+	protected HashMap<Integer, Integer> getBestRule(HashSet<Integer> pos, HashSet<Integer> neg) {
 		HashMap<Integer, Integer> rule = new HashMap<Integer, Integer>();
 		while(neg.size() > 0 && rule.size() < maxRuleLength) {
 			int[] literal = getBestLiteral(pos, neg, rule);
@@ -274,7 +282,7 @@ public class Foil {
 	 * @param rule
 	 * @return
 	 */
-	private int[] getBestLiteral(HashSet<Integer> pos, HashSet<Integer> neg, 
+	protected int[] getBestLiteral(HashSet<Integer> pos, HashSet<Integer> neg, 
 			HashMap<Integer, Integer> rule) {
 		int[] temp = {0, 0};
 		double gain = -2147483647;
@@ -306,7 +314,7 @@ public class Foil {
 	 * @param neg
 	 * @param rule
 	 */
-	private void adjustPosAndNeg(HashSet<Integer> pos, HashSet<Integer> neg, 
+	protected void adjustPosAndNeg(HashSet<Integer> pos, HashSet<Integer> neg, 
 			HashMap<Integer, Integer> rule) {
 		tempVector.clear();
 		for(int index : pos)
@@ -331,7 +339,7 @@ public class Foil {
 	 * @param rule
 	 * 		规则
 	 */
-	private void adjustPos(HashSet<Integer> pos, HashMap<Integer, Integer> rule) {
+	protected void adjustPos(HashSet<Integer> pos, HashMap<Integer, Integer> rule) {
 		tempVector.clear();
 		for(int index : pos) {
 			if(satisfyRule(attributeValue.get(index), rule))
@@ -350,7 +358,7 @@ public class Foil {
 	 * @return
 	 * 		是否满足，如满足返回true。
 	 */
-	private boolean satisfyRule(Vector<Integer> data, HashMap<Integer, Integer> rule) {
+	protected boolean satisfyRule(Vector<Integer> data, HashMap<Integer, Integer> rule) {
 		for(int index : rule.keySet())
 			if(!data.get(index).equals(rule.get(index)))
 				return false;
@@ -362,7 +370,7 @@ public class Foil {
 	 * <p>
 	 * 将规则集置空，以便算法计算新的规则集。该方法在FOIL算法内部调用，用于初始化规则集。
 	 */
-	private void initFoil() {
+	protected void initFoil() {
 		rules.clear();
 	}
 	

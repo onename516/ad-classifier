@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import org.kde9.algorithm.Foil;
+import org.kde9.algorithm.PRM;
 import org.kde9.feature.FeatureSelection;
 
 public class Main {
@@ -45,6 +46,8 @@ public class Main {
 			System.out.println("组训练分类器，使用第 " + i + " 组进行测试 ……");
 			foil.clear();
 			foil.setIgnoreRate(0);
+			foil.setLimit(1);
+			foil.setWRate(0.5);
 			foil.setMaxRuleLength(10);
 			foil.setAttributeNum(fs.getFinalAttributes());
 			foil.setSpanOfAttribute(fs.getValueSpan());
