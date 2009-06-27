@@ -34,8 +34,8 @@ public class FeatureSelection {
 		flag = new int[attributes];
 	}
 	
-	public FeatureSelection(String adNames, String adData) {
-		PreProcess pProcess = new PreProcess(adNames, adData);
+	public FeatureSelection(String adNames, String adData, String outfileName) {
+		PreProcess pProcess = new PreProcess(adNames, adData, outfileName);
 		pProcess.run();
 		attributes = pProcess.getAttributes();
 		instances = pProcess.getInstances();

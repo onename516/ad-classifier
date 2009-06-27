@@ -47,9 +47,10 @@ public class PreProcess {
 		}
 	}
 
-	public PreProcess(String adNames, String adData){
+	public PreProcess(String adNames, String adData, String outfileName){
 		this.adNames = adNames;
 		this.adData = adData;
+		this.adOutFile = outfileName;
 		try {
 			fos = new FileOutputStream(adOutFile);
 			osw = new OutputStreamWriter(fos);
