@@ -22,18 +22,22 @@ public class PreProcess {
 	String adNames = "./data/ad.names";
 	String adData = "./data/ad.data";
 	String adOutFile = "./data/ad2.arff";
+	String adTest;
 	
 	String relation;
 	Vector<String> attribute;
 	Vector<String> dataString;
 	Vector<Integer> type;
+	Vector<Integer>[] processedData;
 	int attributes;
 	int instances;
 	int n;   //离散化区间
 	int [][]data;
+	int runType;
 	
 	public PreProcess(){
 		try {
+			runType = 0;
 			fos = new FileOutputStream(adOutFile);
 			osw = new OutputStreamWriter(fos);
 			bw = new BufferedWriter(osw);
@@ -46,11 +50,21 @@ public class PreProcess {
 			e.printStackTrace();
 		}
 	}
+	
+	public PreProcess(String testFile){
+		runType = 1;
+		this.adTest = testFile;
+		attribute = new Vector<String>();
+		dataString = new Vector<String>();
+		type = new Vector<Integer>();
+		n = 7;
+	}
 
 	public PreProcess(String adNames, String adData, String outfileName){
 		this.adNames = adNames;
 		this.adData = adData;
 		this.adOutFile = outfileName;
+		runType = 2;
 		try {
 			fos = new FileOutputStream(adOutFile);
 			osw = new OutputStreamWriter(fos);
@@ -169,9 +183,86 @@ public class PreProcess {
 		}	
 	}
 	
-	public void run(){
-		readFile();
-		outputFile();
+	private void readTestFile(Vector<Integer> flag){
+		try {
+			//读data文件
+			fis = new FileInputStream(adData);
+			isr = new InputStreamReader(fis);
+			br = new BufferedReader(isr);
+			String temp;
+			int index = 0;
+			while((temp = br.readLine()) != null){
+				if(!temp.trim().startsWith("@") && temp.trim().length() != 0)
+					dataString.add(temp);
+				else if(temp.trim().startsWith("@"))
+					index++;
+			}
+			instances = dataString.size();
+			attributes = index - 3;
+			
+			double []min = {999999, 999999, 999999};
+			double []max = {0, 0, 0};
+			double []dx = new double[3];
+			
+			String [][]tempData = new String[instances][];
+			data = new int[instances][];
+			for(int i = 0; i < instances; i++){
+				tempData[i] = new String[attributes];
+				data[i] = new int[attributes];
+			}
+			processedData = new Vector[instances];
+			for(int i = 0; i < instances; i++)
+				processedData[i] = new Vector<Integer>();
+			
+			for(int i = 0; i < instances; i++){
+				String t = dataString.get(i);
+				String []r = t.split(",");
+				for(int j = 0; j < attributes; j++){
+					if(r[j].trim().equalsIgnoreCase("?")){
+						tempData[i][j] = "0";
+					}else{
+						tempData[i][j] = r[j];
+					}
+				}
+				for(int j = 0; j < 3; j++){
+					if(Double.parseDouble(tempData[i][j]) < min[j])
+						min[j] = Double.parseDouble(tempData[i][j]);
+					if(Double.parseDouble(tempData[i][j]) > max[j])
+						max[j] = Double.parseDouble(tempData[i][j]);
+				}
+			}
+			for(int i = 0; i < 3; i++)
+				dx[i] = (max[i] - min[i])/n;
+			for(int i = 0; i < instances; i++){
+				for(int j = 0; j < 3; j++){
+					int h = (int)(Double.parseDouble(tempData[i][j])/dx[j]);
+					tempData[i][j] = String.valueOf(h);
+				}
+			}
+			for(int i = 0; i < instances; i++){
+				for(int j = 0; j < attributes; j++){
+					data[i][j] = Integer.valueOf(tempData[i][j]);
+				}
+			}
+			for(int i  = 0; i < flag.size(); i++){
+				for(int j = 0; j < instances; j++){
+					processedData[j].add(data[j][flag.get(i)]);
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void run(Vector<Integer> flag){
+		if(runType == 0 || runType == 2){
+			readFile();
+			outputFile();
+		}else if(runType == 1){
+			if(flag != null)
+				readTestFile(flag);
+		}
 	}
 	
 	/**
@@ -211,7 +302,7 @@ public class PreProcess {
 
 	public static void main(String args[]){
 		PreProcess pprocess = new PreProcess();
-		pprocess.run();
+		pprocess.run(null);
 		System.out.println(pprocess.attribute.size());
 		System.out.println(pprocess.dataString.size());
 		System.out.println("Data preprocess successfully!");
