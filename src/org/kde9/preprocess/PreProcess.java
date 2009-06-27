@@ -31,8 +31,25 @@ public class PreProcess {
 	int instances;
 	int n;   //ÀëÉ¢»¯Çø¼ä
 	int [][]data;
+	
+	public PreProcess(){
+		try {
+			fos = new FileOutputStream(adOutFile);
+			osw = new OutputStreamWriter(fos);
+			bw = new BufferedWriter(osw);
+			attribute = new Vector<String>();
+			dataString = new Vector<String>();
+			type = new Vector<Integer>();
+			n = 7;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-	public PreProcess(){		
+	public PreProcess(String adNames, String adData){
+		this.adNames = adNames;
+		this.adData = adData;
 		try {
 			fos = new FileOutputStream(adOutFile);
 			osw = new OutputStreamWriter(fos);
