@@ -36,7 +36,7 @@ public class Main {
 		System.out.println("\n开始进行leave one out测试 ……");
 		
 		Foil foil = new Foil();
-		int totalSum = 0, totalCorrect = 0;
+		int totalSum1 = 0, totalSum2 = 0, totalCorrect = 0;
 		for (int i = 0; i < groupNum; i++) {
 			System.out.print("\n正在使用 ");
 			for(int k = 0; k < groupNum; k++)
@@ -44,7 +44,8 @@ public class Main {
 					System.out.print(k + " ");
 			System.out.println("组训练分类器，使用第 " + i + " 组进行测试 ……");
 			foil.clear();
-			foil.setIgnoreRate(0.005);
+			foil.setIgnoreRate(0);
+			foil.setMaxRuleLength(10);
 			foil.setAttributeNum(fs.getFinalAttributes());
 			foil.setSpanOfAttribute(fs.getValueSpan());
 			for (int j = 0; j < groupNum; j++) {
@@ -55,22 +56,30 @@ public class Main {
 							fs.getType().get(index), (fs.getProcessedData())[index]);
 			}
 			foil.foilTrainingSet(0);
-			int sum = 0, correct = 0;
+			int sum1 = 0, sum2 = 0, correct = 0;
 			for(int index : groups[i]) {
+				if(fs.getType().get(index) == 0) 
+					sum2++;
 				if(foil.belongToCurrentClass((fs.getProcessedData())[index])) {
-					sum++;
+					sum1++;
 					if(fs.getType().get(index) == 0) 
 						correct++;
 				}
 			}
-			totalSum += sum;
+			totalSum1 += sum1;
+			totalSum2 += sum2;
 			totalCorrect += correct;
 			System.out.println("正确率[正确判为非广告的数量" + correct +
-					"/判为非广告总数" + sum +
-					"]为 " + correct/(double)sum);
+					"/判为非广告总数" + sum1 +
+					"]为\n\t" + correct/(double)sum1);
+			System.out.println("覆盖率[正确判为非广告的数量" + correct +
+					"/非广告总数" + sum2 +
+					"]为\n\t" + correct/(double)sum2);
 		}
 		System.out.println();
-		System.out.println(
-				"总正确率为 " + totalCorrect +"/" + totalSum + " = " + totalCorrect/(double)totalSum);
+		System.out.println("总正确率为 " + totalCorrect +"/" + totalSum1 + " = " + 
+				totalCorrect/(double)totalSum1);
+		System.out.println("总覆盖率为 " + totalCorrect +"/" + totalSum2 + " = " + 
+				totalCorrect/(double)totalSum2);
 	}
 }
