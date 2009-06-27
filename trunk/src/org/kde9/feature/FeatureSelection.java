@@ -18,8 +18,24 @@ public class FeatureSelection {
 	int finalAttributes = 0;
 	double []finalKafang;
 	
-	public FeatureSelection() {
+	public FeatureSelection(){
 		PreProcess pProcess = new PreProcess();
+		pProcess.run();
+		attributes = pProcess.getAttributes();
+		instances = pProcess.getInstances();
+		type = pProcess.getType();
+		tempData = pProcess.getData();
+		processedData = new Vector[instances];
+		for(int i = 0; i < instances; i++)
+			processedData[i] = new Vector<Integer>();
+		result = new Vector<Integer>();
+		valueSpan = new Vector<Integer>();
+		finalKafang = new double[attributes];
+		flag = new int[attributes];
+	}
+	
+	public FeatureSelection(String adNames, String adData) {
+		PreProcess pProcess = new PreProcess(adNames, adData);
 		pProcess.run();
 		attributes = pProcess.getAttributes();
 		instances = pProcess.getInstances();
