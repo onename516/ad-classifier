@@ -12,9 +12,11 @@ public class FeatureSelection {
 
 	int []flag;
 	int TFYIELD = 100;   //TF算法域值
+	double CHIYIELD = 3.0;  //CHI算法域值
 	int attributes;
 	int instances;
 	int finalAttributes = 0;
+	double []finalKafang;
 	
 	public FeatureSelection() {
 		PreProcess pProcess = new PreProcess();
@@ -28,11 +30,12 @@ public class FeatureSelection {
 			processedData[i] = new Vector<Integer>();
 		result = new Vector<Integer>();
 		valueSpan = new Vector<Integer>();
+		finalKafang = new double[attributes];
+		flag = new int[attributes];
 	}
 	
 	public void TF(){   //特征频率算法Term Frequency
 		int []frequency = new int[attributes];
-		flag = new int[attributes];
 		for(int j = 0; j < attributes; j++){
 			frequency[j] = 0;
 			flag[j] = 0;
@@ -69,9 +72,9 @@ public class FeatureSelection {
 		int[][] B = new int[attributes][];
 		int[][] C = new int[attributes][];
 		int[][] D = new int[attributes][];
-		int[][]kafang = new int[attributes][];
+		double[][]kafang = new double[attributes][];
 		for(int i = 0; i < attributes; i++){
-			kafang[i] = new int[2];
+			kafang[i] = new double[2];
 			A[i] = new int[2];
 			B[i] = new int[2];
 			C[i] = new int[2];
@@ -90,17 +93,6 @@ public class FeatureSelection {
 			if(type.get(i) == 1){  //广告
 				for(int j = 0; j < attributes; j++){
 					if(tempData[i][j] > 0){
-						A[j][0]++;
-						B[j][1]++;
-					}else if(tempData[i][j] == 0){
-						C[j][0]++;
-						D[j][1]++;
-					}
-				}
-				P[0]++;
-			}else if(type.get(i) == 0){
-				for(int j = 0; j < attributes; j++){
-					if(tempData[i][j] > 0){
 						A[j][1]++;
 						B[j][0]++;
 					}else if(tempData[i][j] == 0){
@@ -109,9 +101,52 @@ public class FeatureSelection {
 					}
 				}
 				P[1]++;
+			}else if(type.get(i) == 0){
+				for(int j = 0; j < attributes; j++){
+					if(tempData[i][j] > 0){
+						A[j][0]++;
+						B[j][1]++;
+					}else if(tempData[i][j] == 0){
+						C[j][0]++;
+						D[j][1]++;
+					}
+				}
+				P[1]++;
 			}
 		}
-		
+		for(int j = 0; j < attributes; j++){
+			for(int index = 0; index < 2; index++){
+				int temp0 = (A[j][index]*D[j][index]-C[j][index]*B[j][index]);
+				int temp1 = A[j][index] + C[j][index];
+				int temp2 = B[j][index] + D[j][index];
+				int temp3 = A[j][index] + B[j][index];
+				int temp4 = C[j][index] + D[j][index];
+				kafang[j][index] = instances*temp0*temp0/(temp1*temp2*temp3*temp4);
+				finalKafang[j] = (double)(P[0]/instances)*kafang[j][0] + (double)(P[1]/instances)*kafang[j][1];
+			}
+		}
+		for(int j = 0; j < attributes; j++){
+			flag[j] = 0;
+		}
+		for(int i = 0; i < attributes; i++){
+			if(finalKafang[i] > CHIYIELD){
+				flag[i] = 1;
+			}	
+		}
+		for(int i = 0; i < attributes; i++){
+			if(flag[i] == 1){
+				result.add(i);
+				if(i == 0 || i == 1 || i == 2){
+					valueSpan.add(8);
+				}else{
+					valueSpan.add(2);
+				}
+				for(int j = 0; j < instances; j++){
+					processedData[j].add(tempData[j][i]);
+				}
+			}
+		}
+		finalAttributes = processedData[0].size();
 	}
 	
 	/**
@@ -156,9 +191,21 @@ public class FeatureSelection {
 		return finalAttributes;
 	}
 
+	/**
+	 * @return the finalKafang
+	 */
+	public double[] getFinalKafang() {
+		return finalKafang;
+	}
+	
+	public void run(){
+		TF();
+		//CHI();
+	}
+
 	public static void main(String args[]){
 		FeatureSelection fs = new FeatureSelection();
-		fs.TF();
+		fs.run();
 		System.out.println(fs.finalAttributes);
 		System.out.println(fs.result.size());
 	}

@@ -363,7 +363,7 @@ public class Foil {
 	public static void main(String[] args) {
 		Foil foil = new Foil();
 		FeatureSelection fs = new FeatureSelection();
-		fs.TF();
+		fs.run();
 		foil.setAttributeNum(fs.getFinalAttributes());
 		foil.setSpanOfAttribute(fs.getValueSpan());
 		for(int i = 0; i < fs.getInstances(); i++)
