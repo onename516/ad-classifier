@@ -38,6 +38,11 @@ public class Foil {
 	private Vector<HashMap<Integer, Integer>> rules;
 	
 	/**
+	 * 忽略比率
+	 */
+	private double ignoreRate = 0;
+	
+	/**
 	 * 临时数据
 	 */
 	private Vector<Integer> tempVector = new Vector<Integer>();
@@ -114,6 +119,15 @@ public class Foil {
 	}
 	
 	/**
+	 * 改变忽略比率
+	 * @param ignoreRate
+	 */
+	public void setIgnoreRate(double ignoreRate) {
+		if(ignoreRate >= 0 && ignoreRate < 1)
+			this.ignoreRate = ignoreRate;
+	}
+
+	/**
 	 * 增加一个训练数据
 	 * @throws ArrayIndexOutOfBoundsException
 	 * 		当传进来的Vector的大小与属性值的个数不符时，可能抛出该异常。
@@ -155,6 +169,7 @@ public class Foil {
 	 */
 	public void clear() {
 		attributeNum = 0;
+		ignoreRate = 0;
 		span.clear();
 		attributeValue.clear();
 		types.clear();
@@ -177,6 +192,33 @@ public class Foil {
 	}
 	
 	/**
+	 * 输出规则集
+	 */
+	public void showRule() {
+		System.out.println();
+		System.out.println("规则集：");
+		for(HashMap<Integer, Integer> r : rules)
+			System.out.println("\t" + r);
+	}
+	
+	/**
+	 * 计算正确率
+	 * @param type
+	 */
+	public void calculate(int type) {
+		int i = 0, j = 0;
+		for(Vector<Integer> v : attributeValue)
+			if(belongToCurrentClass(v))
+				i++;
+		for(int index : types.get(type))
+			if(belongToCurrentClass(attributeValue.get(index)))
+				j++;
+		System.out.println();
+		System.out.println("完全覆盖" + type + "类? " + (j == types.get(type).size()) + "\n正确率： "); 
+		System.out.println("\t" + j + " / " + i + " = " + j/(double)i);
+	}
+	
+	/**
 	 * FOIL算法实现
 	 * @param type
 	 */
@@ -192,7 +234,7 @@ public class Foil {
 			if(t != type)
 				neg.addAll(types.get(t));
 		double i = 0;
-		while(pos.size() > 0) {
+		while(pos.size() > ignoreRate*start) {
 			HashSet<Integer> posx = (HashSet<Integer>) pos.clone();
 			HashSet<Integer> negx = (HashSet<Integer>) neg.clone();
 			HashMap<Integer, Integer> rule = getBestRule(posx, negx);
@@ -340,25 +382,6 @@ public class Foil {
 		}
 	}
 	
-	private void showRule() {
-		System.out.println();
-		System.out.println("规则集：");
-		for(HashMap<Integer, Integer> r : rules)
-			System.out.println("\t" + r);
-	}
-	
-	public void calculate(int type) {
-		int i = 0, j = 0;
-		for(Vector<Integer> v : attributeValue)
-			if(belongToCurrentClass(v))
-				i++;
-		for(int index : types.get(type))
-			if(belongToCurrentClass(attributeValue.get(index)))
-				j++;
-		System.out.println();
-		System.out.println("完全覆盖" + type + "类? " + (j == types.get(type).size()) + "\n正确率： "); 
-		System.out.println("\t" + j + " / " + i + " = " + j/(double)i);
-	}
 	
 	public static void main(String[] args) {
 		Foil foil = new Foil();
