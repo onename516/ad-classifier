@@ -165,6 +165,14 @@ public class FeatureSelection {
 		finalAttributes = processedData[0].size();
 	}
 	
+	public Vector<Integer>[] processTestFile(String testFile){
+		PreProcess pp = new PreProcess(testFile);
+		if(result != null){
+			pp.run(result);
+		}
+		return pp.getProcessedData();
+	}
+	
 	/**
 	 * @return the result
 	 */
@@ -214,14 +222,16 @@ public class FeatureSelection {
 		return finalKafang;
 	}
 	
-	public void run(){
-		//TF();
-		CHI();
+	public void run(int flag){
+		if(flag == 0)
+			TF();
+		else if(flag == 1)
+			CHI();
 	}
 
 	public static void main(String args[]){
 		FeatureSelection fs = new FeatureSelection();
-		fs.run();
+		fs.run(0);
 		System.out.println(fs.finalAttributes);
 		System.out.println(fs.result.size());
 	}
