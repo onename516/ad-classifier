@@ -300,6 +300,13 @@ public class PreProcess {
 		return data;
 	}
 
+	/**
+	 * @return the processedData
+	 */
+	public Vector<Integer>[] getProcessedData() {
+		return processedData;
+	}
+
 	public static void main(String args[]){
 		PreProcess pprocess = new PreProcess();
 		pprocess.run(null);
