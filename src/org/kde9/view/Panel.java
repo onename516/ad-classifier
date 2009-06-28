@@ -14,6 +14,7 @@ import java.io.Writer;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
@@ -71,14 +72,14 @@ implements Constants, ActionListener {
 		JPanel right = new JPanel();
 		right.setLayout(new BorderLayout());
 		right.add("North", rightUp);
-		right.add("Center", area);
+		right.add("Center", new JScrollPane(area));
 		right.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
 		
 		setLayout(new BorderLayout());
 		add("West", left);
 		add("Center", right);
 		
-		controller = new Controller(area);
+		controller = new Controller(area, start, stop);
 	}
 
 	public void actionPerformed(ActionEvent e) {
