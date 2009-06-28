@@ -30,7 +30,7 @@ extends JTabbedPane {
 		return getSelectedIndex();
 	}
 	
-	public double getvValue() {
+	public double getValue() {
 		return leaveOneOut.getValue();
 	}
 	
