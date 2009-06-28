@@ -222,6 +222,20 @@ public class FeatureSelection {
 		return finalKafang;
 	}
 	
+	/**
+	 * @param tfyield the tFYIELD to set
+	 */
+	public void setTFYIELD(int tfyield) {
+		TFYIELD = tfyield;
+	}
+
+	/**
+	 * @param chiyield the cHIYIELD to set
+	 */
+	public void setCHIYIELD(double chiyield) {
+		CHIYIELD = chiyield;
+	}
+
 	public void run(int flag){
 		if(flag == 0)
 			TF();
