@@ -9,7 +9,7 @@ extends JPanel {
 	private SettingUnit u;
 	
 	CHI() {
-		u = new SettingUnit("χ方统计量", -20, 20, 3, 1);
+		u = new SettingUnit("χ方统计量", -500, 500, 0, 100);
 		
 		add(u);
 	}
