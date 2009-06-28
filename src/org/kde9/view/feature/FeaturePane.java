@@ -17,7 +17,7 @@ extends JTabbedPane {
 		
 		add("TF", tf);
 		add("CHI", chi);
-		setPreferredSize(new Dimension(300, 110));
+		setPreferredSize(new Dimension(300, 100));
 		
 		TitledBorder t = new TitledBorder("选择特征选取方法");
 		t.setTitleColor(Color.RED);

@@ -7,6 +7,9 @@ import java.util.Vector;
 import org.kde9.feature.FeatureSelection;
 
 public class Foil {
+	
+	static boolean flag = true;
+	
 	/**
 	 * 属性值的个数
 	 */
@@ -52,6 +55,10 @@ public class Foil {
 		attributeValue = new Vector<Vector<Integer>>();
 		types = new HashMap<Integer, HashSet<Integer>>();
 		rules = new Vector<HashMap<Integer,Integer>>();
+	}
+	
+	public static void setFlag(boolean f) {
+		flag = f;
 	}
 	
 	public void setMaxRuleLength(int maxRuleLength) {
@@ -176,6 +183,7 @@ public class Foil {
 	 * 用于重新插入训练集前清除旧的数据。
 	 */
 	public void clear() {
+		flag = true;
 		attributeNum = 0;
 		ignoreRate = 0;
 		maxRuleLength = 10;
@@ -243,7 +251,7 @@ public class Foil {
 			if(t != type)
 				neg.addAll(types.get(t));
 		double i = 0;
-		while(pos.size() > (int)(ignoreRate*start)) {
+		while(flag && pos.size() > (int)(ignoreRate*start)) {
 			HashSet<Integer> posx = (HashSet<Integer>) pos.clone();
 			HashSet<Integer> negx = (HashSet<Integer>) neg.clone();
 			HashMap<Integer, Integer> rule = getBestRule(posx, negx);

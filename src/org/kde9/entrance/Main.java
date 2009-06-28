@@ -45,10 +45,10 @@ public class Main {
 					System.out.print(k + " ");
 			System.out.println("组训练分类器，使用第 " + i + " 组进行测试 ……");
 			foil.clear();
-			foil.setIgnoreRate(0);
+			foil.setIgnoreRate(0.05);
 			foil.setLimit(1);
 			foil.setWRate(0.5);
-			foil.setMaxRuleLength(10);
+			foil.setMaxRuleLength(5);
 			foil.setAttributeNum(fs.getFinalAttributes());
 			foil.setSpanOfAttribute(fs.getValueSpan());
 			for (int j = 0; j < groupNum; j++) {
@@ -58,6 +58,7 @@ public class Main {
 					foil.insertTrainingSet(
 							fs.getType().get(index), (fs.getProcessedData())[index]);
 			}
+			System.out.println("………………………………");
 			foil.foilTrainingSet(0);
 			int sum1 = 0, sum2 = 0, correct = 0;
 			for(int index : groups[i]) {

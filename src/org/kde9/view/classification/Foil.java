@@ -10,8 +10,8 @@ extends JPanel {
 	SettingUnit u2;
 	
 	Foil() {
-		u1 = new SettingUnit("数据忽略比率", 0, 100, 100);
-		u2 = new SettingUnit("最长规则限制", 1, 20, 1);
+		u1 = new SettingUnit("数据忽略比率", 0, 100, 5, 100);
+		u2 = new SettingUnit("最长规则限制", 1, 20, 10, 1);
 		
 		add(u1);
 		add(u2);

@@ -9,7 +9,7 @@ extends JPanel {
 	private SettingUnit u;
 	
 	TF() {
-		u = new SettingUnit("频率阈值", 0, 500, 1);
+		u = new SettingUnit("频率阈值", 0, 500, 100, 1);
 		
 		add(u);
 	}
