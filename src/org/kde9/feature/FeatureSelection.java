@@ -73,6 +73,11 @@ public class FeatureSelection {
 	}
 	
 	public void TF(){   //特征频率算法Term Frequency
+		result.clear();
+		valueSpan.clear();
+		for(int i = 0; i < instances; i++){
+			processedData[i].clear();
+		}
 		int []frequency = new int[attributes];
 		for(int j = 0; j < attributes; j++){
 			frequency[j] = 0;
@@ -106,6 +111,11 @@ public class FeatureSelection {
 	}
 	
 	public void CHI(){   //卡方统计量
+		result.clear();
+		valueSpan.clear();
+		for(int i = 0; i < instances; i++){
+			processedData[i].clear();
+		}
 		int[][] A = new int[attributes][];
 		int[][] B = new int[attributes][];
 		int[][] C = new int[attributes][];
