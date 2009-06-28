@@ -50,9 +50,9 @@ public class Controller {
 	public void start() {
 		flag = true;
 		if (classifyType == 0)
-			foil = new Foil();
+			foil = new Foil(area);
 		else if (classifyType == 1)
-			foil = new PRM();
+			foil = new PRM(area);
 		fs.setTFYIELD(TFYIELD);
 		fs.setCHIYIELD(CHIYIELD);
 		fs.run(featureType);
@@ -115,7 +115,7 @@ public class Controller {
 						totalSum1 += sum1;
 						totalSum2 += sum2;
 						totalCorrect += correct;
-						area.append("正确率[正确判为非广告的数量" + correct + "/判为非广告总数"
+						area.append("\n正确率[正确判为非广告的数量" + correct + "/判为非广告总数"
 								+ sum1 + "]为\n\t" + correct / (double) sum1
 								+ "\n");
 						area.append("覆盖率[正确判为非广告的数量" + correct + "/非广告总数"
@@ -126,8 +126,6 @@ public class Controller {
 							+ " = " + totalCorrect / (double) totalSum1);
 					area.append("\n总覆盖率为 " + totalCorrect + "/" + totalSum2
 							+ " = " + totalCorrect / (double) totalSum2);
-					start.setEnabled(true);
-					stop.setEnabled(false);
 				} else if (dataType == 1) {
 					foil.clear();
 					foil.setIgnoreRate(ignoreRate);
@@ -140,8 +138,19 @@ public class Controller {
 						foil.insertTrainingSet(fs.getType().get(i),
 								(fs.getProcessedData())[i]);
 					}
+					area.append("开始训练 ……\n");
 					foil.foilTrainingSet(0);
+					Vector<Integer>[] data = fs.processTestFile(file3);
+					for(int i = 0; i < data.length; i++) {
+						area.append("\n第" + i + "组测试数据为\n[");
+						for(int j = 0; j < data[i].size(); j++)
+							area.append(data[i].get(j) + " ");
+						area.append("]\n");
+						area.append("该测试数据是否为广告：\n\t" + !foil.belongToCurrentClass(data[i]) + "\n");
+					}
 				}
+				start.setEnabled(true);
+				stop.setEnabled(false);
 			}
 		}.start();
 	}

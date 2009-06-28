@@ -36,7 +36,7 @@ public class Main {
 
 		System.out.println("\n开始进行leave one out测试 ……");
 		
-		Foil foil = new Foil();
+		Foil foil = new Foil(null);
 		int totalSum1 = 0, totalSum2 = 0, totalCorrect = 0;
 		for (int i = 0; i < groupNum; i++) {
 			System.out.print("\n正在使用 ");

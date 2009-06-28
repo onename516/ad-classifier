@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 
+import javax.swing.JTextArea;
+
 public class PRM 
 extends Foil {
 	private Vector<Double> weight;
@@ -11,8 +13,8 @@ extends Foil {
 	private double totalWeight = 0;
 	private double limit = 0.1;
 	
-	public PRM() {
-		super();
+	public PRM(JTextArea area) {
+		super(area);
 		weight = new Vector<Double>();	
 	}
 	
@@ -57,10 +59,13 @@ extends Foil {
 			rules.add(rule);
 			adjustPos(pos, rule);
 			double rate = 1-totalWeight/start;
-//			if(10*rate > i) {
-//				i = 10*rate + 1;
-				System.out.println((100*rate) + "%");/////////////////////////////////////
-//			}
+			if(10*rate > i) {
+				i = 10*rate + 1;
+				if(area != null)
+					area.append((int)(100*rate) + "% ");/////////////////////////////////////
+				else
+					System.out.println((int)(100*rate) + "%");
+			}
 		}
 	}
 	

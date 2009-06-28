@@ -118,6 +118,7 @@ implements Constants, ActionListener {
 			controller.setMaxRuleLength((int)classificationPane.getFoilLength());
 		} else if(classificationPane.getType() == 1) {
 			controller.setIgnoreRate(classificationPane.getPRMRate());
+			controller.setMaxRuleLength(1);
 			controller.setLimit(classificationPane.getPRMLimit());
 			controller.setWRate(classificationPane.getPRMWRate());
 		}

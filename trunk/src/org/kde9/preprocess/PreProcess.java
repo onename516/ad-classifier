@@ -196,7 +196,7 @@ public class PreProcess {
 	private void readTestFile(Vector<Integer> flag){
 		try {
 			//¶ÁdataÎÄ¼þ
-			fis = new FileInputStream(adData);
+			fis = new FileInputStream(adTest);
 			isr = new InputStreamReader(fis);
 			br = new BufferedReader(isr);
 			String temp;
