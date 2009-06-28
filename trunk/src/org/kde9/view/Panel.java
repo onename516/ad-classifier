@@ -85,8 +85,9 @@ implements Constants, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == start) {
 			area.setText("");
+			setting();
 			if(!trainingPane.isFlag()) {
-				controller.init("", "", 5);
+				controller.init();
 				trainingPane.setFlag(true);
 			}
 			start.setEnabled(false);
@@ -96,6 +97,29 @@ implements Constants, ActionListener {
 			controller.stop();
 			start.setEnabled(true);
 			stop.setEnabled(false);
+		}
+	}
+	
+	private void setting() {
+		controller.setFile1(trainingPane.getFile()[0]);
+		controller.setFile2(trainingPane.getFile()[1]);
+		
+		controller.setDataType(testingPane.getType());
+		controller.setFile3(testingPane.getFile());
+		controller.setGroupNum((int)testingPane.getValue());
+		
+		controller.setFeatureType(featurePane.getType());
+		controller.setTFYIELD((int)featurePane.getValueTF());
+		controller.setCHIYIELD(featurePane.getValueCHI());
+		
+		controller.setClassifyType(classificationPane.getType());
+		if(classificationPane.getType() == 0) {
+			controller.setIgnoreRate(classificationPane.getFoilRate());
+			controller.setMaxRuleLength((int)classificationPane.getFoilLength());
+		} else if(classificationPane.getType() == 1) {
+			controller.setIgnoreRate(classificationPane.getPRMRate());
+			controller.setLimit(classificationPane.getPRMLimit());
+			controller.setWRate(classificationPane.getPRMWRate());
 		}
 	}
 }

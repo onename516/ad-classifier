@@ -12,7 +12,7 @@ public class Main {
 		System.out.println("************正在载入数据************");
 		
 		FeatureSelection fs = new FeatureSelection();
-		fs.run();
+		fs.run(0);
 		
 		System.out.println("************数据载入完成************");
 		
