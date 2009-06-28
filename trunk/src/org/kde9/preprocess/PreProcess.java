@@ -59,12 +59,22 @@ public class PreProcess {
 		type = new Vector<Integer>();
 		n = 7;
 	}
+	
+	public PreProcess(String adNames, String adData){
+		this.adNames = adNames;
+		this.adData = adData;
+		runType = 2;
+		attribute = new Vector<String>();
+		dataString = new Vector<String>();
+		type = new Vector<Integer>();
+		n = 7;
+	}
 
 	public PreProcess(String adNames, String adData, String outfileName){
 		this.adNames = adNames;
 		this.adData = adData;
 		this.adOutFile = outfileName;
-		runType = 2;
+		runType = 3;
 		try {
 			fos = new FileOutputStream(adOutFile);
 			osw = new OutputStreamWriter(fos);
@@ -256,12 +266,14 @@ public class PreProcess {
 	}
 	
 	public void run(Vector<Integer> flag){
-		if(runType == 0 || runType == 2){
+		if(runType == 0 || runType == 3){
 			readFile();
 			outputFile();
 		}else if(runType == 1){
 			if(flag != null)
 				readTestFile(flag);
+		}else if(runType == 2){
+			readFile();
 		}
 	}
 	
