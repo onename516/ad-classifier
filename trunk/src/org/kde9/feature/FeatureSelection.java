@@ -18,8 +18,10 @@ public class FeatureSelection {
 	int finalAttributes = 0;
 	double []finalKafang;
 	
+	PreProcess pProcess;
+	
 	public FeatureSelection(){
-		PreProcess pProcess = new PreProcess();
+		pProcess = new PreProcess();
 		pProcess.run(null);
 		attributes = pProcess.getAttributes();
 		instances = pProcess.getInstances();
@@ -35,35 +37,39 @@ public class FeatureSelection {
 	}
 	
 	public FeatureSelection(String adNames, String adData) {
-		PreProcess pProcess = new PreProcess(adNames, adData);
-		pProcess.run(null);
-		attributes = pProcess.getAttributes();
-		instances = pProcess.getInstances();
-		type = pProcess.getType();
-		tempData = pProcess.getData();
-		processedData = new Vector[instances];
-		for(int i = 0; i < instances; i++)
-			processedData[i] = new Vector<Integer>();
-		result = new Vector<Integer>();
-		valueSpan = new Vector<Integer>();
-		finalKafang = new double[attributes];
-		flag = new int[attributes];
+		if(adNames != null && adData != null){
+			pProcess = new PreProcess(adNames, adData);
+			pProcess.run(null);
+			attributes = pProcess.getAttributes();
+			instances = pProcess.getInstances();
+			type = pProcess.getType();
+			tempData = pProcess.getData();
+			processedData = new Vector[instances];
+			for(int i = 0; i < instances; i++)
+				processedData[i] = new Vector<Integer>();
+			result = new Vector<Integer>();
+			valueSpan = new Vector<Integer>();
+			finalKafang = new double[attributes];
+			flag = new int[attributes];
+		}
 	}
 	
 	public FeatureSelection(String adNames, String adData, String outfileName) {
-		PreProcess pProcess = new PreProcess(adNames, adData, outfileName);
-		pProcess.run(null);
-		attributes = pProcess.getAttributes();
-		instances = pProcess.getInstances();
-		type = pProcess.getType();
-		tempData = pProcess.getData();
-		processedData = new Vector[instances];
-		for(int i = 0; i < instances; i++)
-			processedData[i] = new Vector<Integer>();
-		result = new Vector<Integer>();
-		valueSpan = new Vector<Integer>();
-		finalKafang = new double[attributes];
-		flag = new int[attributes];
+		if(adNames != null && adData != null && outfileName != null){
+			pProcess = new PreProcess(adNames, adData, outfileName);
+			pProcess.run(null);
+			attributes = pProcess.getAttributes();
+			instances = pProcess.getInstances();
+			type = pProcess.getType();
+			tempData = pProcess.getData();
+			processedData = new Vector[instances];
+			for(int i = 0; i < instances; i++)
+				processedData[i] = new Vector<Integer>();
+			result = new Vector<Integer>();
+			valueSpan = new Vector<Integer>();
+			finalKafang = new double[attributes];
+			flag = new int[attributes];
+		}
 	}
 	
 	public void TF(){   //ÌØÕ÷ÆµÂÊËã·¨Term Frequency
@@ -253,10 +259,11 @@ public class FeatureSelection {
 	}
 
 	public void run(int flag){
-		if(flag == 0)
+		if(flag == 0){
 			TF();
-		else if(flag == 1)
+		}else if(flag == 1){
 			CHI();
+		}
 	}
 
 	public static void main(String args[]){
