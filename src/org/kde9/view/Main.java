@@ -1,16 +1,9 @@
 package org.kde9.view;
 
-import java.security.AccessControlException;
-import java.util.Arrays;
-
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import ch.randelshofer.quaqua.QuaquaManager;
-import ch.randelshofer.quaqua.util.Methods;
 
 public class Main 
 extends JFrame {
