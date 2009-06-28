@@ -1,5 +1,6 @@
 package org.kde9.control;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.Vector;
 
@@ -60,6 +61,7 @@ public class Controller {
 		area.append("选取的特征数量" + fs.getFinalAttributes() + "\n");
 		new Thread() {
 			public void run() {
+				Date d = new Date();
 				if (dataType == 0) {
 					groups = new Vector[groupNum];
 					Random random = new Random();
@@ -151,6 +153,7 @@ public class Controller {
 				}
 				start.setEnabled(true);
 				stop.setEnabled(false);
+				area.append("\n运行时间：" + (new Date().getTime()-d.getTime()) + " ms");
 			}
 		}.start();
 	}
