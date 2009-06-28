@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Vector;
 
+import javax.swing.JTextArea;
+
 import org.kde9.feature.FeatureSelection;
 
 public class Foil {
@@ -50,7 +52,10 @@ public class Foil {
 	 */
 	protected Vector<Integer> tempVector = new Vector<Integer>();
 	
-	public Foil() {
+	protected JTextArea area;
+	
+	public Foil(JTextArea area) {
+		this.area = area;
 		span = new Vector<Integer>();
 		attributeValue = new Vector<Vector<Integer>>();
 		types = new HashMap<Integer, HashSet<Integer>>();
@@ -260,7 +265,10 @@ public class Foil {
 			double rate = 1-pos.size()/start;
 			if(10*rate > i) {
 				i = 10*rate + 1;
-				System.out.println((int)(100*rate) + "%");/////////////////////////////////////
+				if(area != null)
+					area.append((int)(100*rate) + "% ");/////////////////////////////////////
+				else
+					System.out.println((int)(100*rate) + "%");
 			}
 		}
 	}
@@ -400,18 +408,18 @@ public class Foil {
 	}
 	
 	
-	public static void main(String[] args) {
-		Foil foil = new Foil();
-		FeatureSelection fs = new FeatureSelection();
-		fs.run(0);
-		foil.setAttributeNum(fs.getFinalAttributes());
-		foil.setSpanOfAttribute(fs.getValueSpan());
-		for(int i = 0; i < fs.getInstances(); i++)
-			foil.insertTrainingSet(fs.getType().get(i), (fs.getProcessedData())[i]);
-		System.out.println("初始化完成，开始训练！");
-		foil.foilTrainingSet(0);
-		foil.summary(false);
-		foil.showRule();
-		foil.calculate(0);
-	}
+//	public static void main(String[] args) {
+//		Foil foil = new Foil();
+//		FeatureSelection fs = new FeatureSelection();
+//		fs.run(0);
+//		foil.setAttributeNum(fs.getFinalAttributes());
+//		foil.setSpanOfAttribute(fs.getValueSpan());
+//		for(int i = 0; i < fs.getInstances(); i++)
+//			foil.insertTrainingSet(fs.getType().get(i), (fs.getProcessedData())[i]);
+//		System.out.println("初始化完成，开始训练！");
+//		foil.foilTrainingSet(0);
+//		foil.summary(false);
+//		foil.showRule();
+//		foil.calculate(0);
+//	}
 }

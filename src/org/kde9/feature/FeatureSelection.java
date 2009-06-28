@@ -240,6 +240,10 @@ public class FeatureSelection {
 		return instances;
 	}
 
+	public int getAttributes() {
+		return attributes;
+	}
+
 	/**
 	 * @return the finalAttributes
 	 */
