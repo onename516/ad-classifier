@@ -12,7 +12,7 @@ public class FeatureSelection {
 
 	int []flag;
 	int TFYIELD = 100;   //TF算法域值
-	double CHIYIELD = -20;  //CHI算法域值
+	double CHIYIELD = 3;  //CHI算法域值
 	int attributes;
 	int instances;
 	int finalAttributes = 0;

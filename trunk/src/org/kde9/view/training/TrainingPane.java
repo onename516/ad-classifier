@@ -26,6 +26,14 @@ extends JPanel {
 		setBorder(t);
 	}
 	
+	public boolean isFlag() {
+		return selectFile.isFlag();
+	}
+
+	public void setFlag(boolean flag) {
+		selectFile.setFlag(flag);
+	}
+
 	public String[] getFile() {
 		return selectFile.getFile();
 	}

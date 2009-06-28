@@ -17,6 +17,7 @@ implements ActionListener {
 	private JLabel l1;
 	private JButton b2;
 	private JLabel l2;
+	private boolean flag = false;
 	
 	SelectFile() {
 		b1 = new JButton("选择特征文件");
@@ -35,6 +36,14 @@ implements ActionListener {
 		add(l2);
 	}
 	
+	public boolean isFlag() {
+		return flag;
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+
 	public String[] getFile() {
 		return new String[] {l1.getText(), l2.getText()};
 	}
@@ -47,10 +56,12 @@ implements ActionListener {
 			if(e.getSource() == b1) {
 				l1.setText(chooser.getSelectedFile().getAbsolutePath());
 				l1.setToolTipText(l1.getText());
+				flag = false;
 			}
 			else if(e.getSource() == b2) {
 				l2.setText(chooser.getSelectedFile().getAbsolutePath());
 				l2.setToolTipText(l2.getText());
+				flag = false;
 			}
 		}
 	}

@@ -18,11 +18,12 @@ implements ChangeListener {
 	JLabel value;
 	double rate;
 	
-	public SettingUnit(String name, int begin, int end, double rate) {
+	public SettingUnit(String name, int begin, int end, int current, double rate) {
 		this.rate = rate;
 		this.name = new JLabel(name);
 		this.name.setHorizontalAlignment(JLabel.CENTER);
 		slider = new JSlider(begin, end);
+		slider.setValue(current);
 		slider.addChangeListener(this);
 		slider.setPreferredSize(new Dimension(150, 20));
 		value = new JLabel(String.valueOf(slider.getValue()/rate));

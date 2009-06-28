@@ -16,7 +16,7 @@ extends JPanel {
 		l = new JLabel("使用 leave one out 方法");
 		l.setPreferredSize(new Dimension(200, 15));
 		l.setHorizontalAlignment(JLabel.CENTER);
-		u1 = new SettingUnit("分组个数", 2, 20, 1);
+		u1 = new SettingUnit("分组个数", 2, 20, 5, 1);
 		
 		add(l);
 		add(u1);
