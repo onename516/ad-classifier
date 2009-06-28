@@ -11,7 +11,7 @@ extends JPanel {
 	SettingUnit u3;
 	
 	PRM() {
-		u1 = new SettingUnit("结束阈值", 0, 100, 10, 100);
+		u1 = new SettingUnit("结束阈值", 0, 99, 10, 100);
 		u2 = new SettingUnit("增益下限", 1, 100, 10, 10);
 		u3 = new SettingUnit("衰减比率", 0, 99, 10, 100);
 		
