@@ -3,6 +3,7 @@ package org.kde9.control;
 import java.util.Random;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JTextArea;
 
 import org.kde9.algorithm.Foil;
@@ -11,6 +12,9 @@ import org.kde9.view.training.TrainingPane;
 
 public class Controller {
 	private JTextArea area;
+	private JButton start;
+	private JButton stop;
+	
 	private FeatureSelection fs;
 	private Foil foil;
 	private Vector<Integer>[] groups;
@@ -18,8 +22,10 @@ public class Controller {
 	
 	private boolean flag = true;
 	
-	public Controller(JTextArea area) {
+	public Controller(JTextArea area, JButton start, JButton stop) {
 		this.area = area;
+		this.start = start;
+		this.stop = stop;
 		foil = new Foil();
 	}
 	
@@ -101,6 +107,8 @@ public class Controller {
 						+ totalCorrect / (double) totalSum1);
 				area.append("\n×Ü¸²¸ÇÂÊÎª " + totalCorrect + "/" + totalSum2 + " = "
 						+ totalCorrect / (double) totalSum2);
+				start.setEnabled(true);
+				stop.setEnabled(false);
 			}
 		}.start();
 	}
